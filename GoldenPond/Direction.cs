@@ -1,6 +1,6 @@
 ﻿namespace GoldenPond
 {
-    enum Direction
+    internal enum Direction
     {
         North = 1,
         South = 2,
