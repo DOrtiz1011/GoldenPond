@@ -1,15 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace GoldenPond
 {
     internal sealed class Pond
     {
-        public int Height { get; set; }
-        public int Width { get; set; }
+        private int Height { get; set; }
+        private int Width { get; set; }
 
-        public readonly List<Duck> DuctDataList = new List<Duck>();
+        private readonly List<Duck> DuctDataList = new List<Duck>();
+
+        public void Initalize(string inputFile)
+        {
+            var inputCommands = ReadImputFile(inputFile);
+
+            for (var lineNumber = 0; lineNumber < inputCommands.Count; lineNumber++)
+            {
+                if (lineNumber == 0)
+                {
+                    var pondDementions = inputCommands[lineNumber].Split(' '); // first line is the pond size
+
+                    Width = int.Parse(pondDementions[0]);
+                    Height = int.Parse(pondDementions[1]);
+                }
+                else if (lineNumber % 2 == 1)
+                {
+                    var duckParameters = inputCommands[lineNumber].Split(' '); // odd numbered line is a new duck
+
+                    DuctDataList.Add(new Duck
+                    {
+                        Position = new Position { X = int.Parse(duckParameters[0]), Y = int.Parse(duckParameters[1]) },
+                        Direction = duckParameters[2].ConvertCharToDirection(),
+                        Commands = GetMotionList(inputCommands[lineNumber + 1]) // even numbered line is the duck's commands
+                    });
+                }
+            }
+        }
+
+        private static List<Motion> GetMotionList(string commands) => commands.Select(c => c.ConvertCharToMotion()).ToList();
+
+        private static List<string> ReadImputFile(string inputFile)
+        {
+            var inputCommands = new List<string>();
+
+            using (var streamReader = new StreamReader(inputFile))
+            {
+                while (streamReader.Peek() >= 0)
+                {
+                    inputCommands.Add(streamReader.ReadLine());
+                }
+            }
+
+            if (inputCommands.Count < 3 || inputCommands.Count % 2 != 1)
+            {
+                throw new ArgumentException($"Input file '{inputFile}' is not properly formatted.");
+            }
+
+            return inputCommands;
+        }
 
         public void PrintDuckInfo()
         {
@@ -46,8 +96,6 @@ namespace GoldenPond
                 case Motion.Forward:
                     Move(duck);
                     break;
-                default:
-                    throw new ArgumentException($"Command '{motion}' is invalid.", nameof(motion));
             }
         }
 
