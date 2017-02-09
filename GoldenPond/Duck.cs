@@ -6,6 +6,6 @@ namespace GoldenPond
     {
         public Position Position { get; set; }
         public Direction Direction { get; set; }
-        public List<Motion> Commands { get; set; }
+        public List<Motion> MotionList { get; set; }
     }
 }

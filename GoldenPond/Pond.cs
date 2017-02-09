@@ -32,8 +32,8 @@ namespace GoldenPond
                     DuctDataList.Add(new Duck
                     {
                         Position = new Position { X = int.Parse(duckParameters[0]), Y = int.Parse(duckParameters[1]) },
-                        Direction = duckParameters[2].ConvertCharToDirection(),
-                        Commands = GetMotionList(inputCommands[lineNumber + 1]) // even numbered line is the duck's commands
+                        Direction = duckParameters[2].ConvertStringToDirection(),
+                        MotionList = GetMotionList(inputCommands[lineNumber + 1]) // even numbered line is the duck's commands
                     });
                 }
             }
@@ -76,11 +76,11 @@ namespace GoldenPond
                 throw new ArgumentException("Pond dimentions have not been set.");
             }
 
-            foreach (var duckData in DuctDataList)
+            foreach (var duck in DuctDataList)
             {
-                foreach (var motion in duckData.Commands)
+                foreach (var motion in duck.MotionList)
                 {
-                    ExecuteCommand(duckData, motion);
+                    ExecuteCommand(duck, motion);
                 }
             }
         }

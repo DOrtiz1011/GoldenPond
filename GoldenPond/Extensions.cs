@@ -4,7 +4,7 @@ namespace GoldenPond
 {
     internal static class Extensions
     {
-        public static Direction ConvertCharToDirection(this string str)
+        public static Direction ConvertStringToDirection(this string str)
         {
             Direction direction;
 
