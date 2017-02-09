@@ -32,14 +32,61 @@ namespace GoldenPond
                     DuctDataList.Add(new Duck
                     {
                         Position = new Position { X = int.Parse(duckParameters[0]), Y = int.Parse(duckParameters[1]) },
-                        Direction = duckParameters[2].ConvertStringToDirection(),
+                        Direction = ConvertStringToDirection(duckParameters[2]),
                         MotionList = GetMotionList(inputCommands[lineNumber + 1]) // even numbered line is the duck's commands
                     });
                 }
             }
         }
 
-        private static List<Motion> GetMotionList(string commands) => commands.Select(c => c.ConvertCharToMotion()).ToList();
+        private static Direction ConvertStringToDirection(string str)
+        {
+            Direction direction;
+
+            switch (str)
+            {
+                case "N":
+                    direction = Direction.North;
+                    break;
+                case "S":
+                    direction = Direction.South;
+                    break;
+                case "E":
+                    direction = Direction.East;
+                    break;
+                case "W":
+                    direction = Direction.West;
+                    break;
+                default:
+                    throw new ArgumentException($"'{str}' is not a valid direction.");
+            }
+
+            return direction;
+        }
+
+        private static List<Motion> GetMotionList(string commands) => commands.Select(ConvertCharToMotion).ToList();
+
+        private static Motion ConvertCharToMotion(char c)
+        {
+            Motion direction;
+
+            switch (c)
+            {
+                case 'P':
+                    direction = Motion.Port;
+                    break;
+                case 'S':
+                    direction = Motion.Starboard;
+                    break;
+                case 'F':
+                    direction = Motion.Forward;
+                    break;
+                default:
+                    throw new ArgumentException($"'{c}' is not a valid direction.");
+            }
+
+            return direction;
+        }
 
         private static List<string> ReadImputFile(string inputFile)
         {

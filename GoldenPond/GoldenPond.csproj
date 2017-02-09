@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="Direction.cs" />
     <Compile Include="Duck.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="Motion.cs" />
     <Compile Include="Pond.cs" />
     <Compile Include="Position.cs" />
