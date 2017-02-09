@@ -9,8 +9,9 @@ namespace GoldenPond
     {
         private int Height { get; set; }
         private int Width { get; set; }
+        private bool Initialized;
 
-        private readonly List<Duck> DuctDataList = new List<Duck>();
+        private readonly List<Duck> DuctList = new List<Duck>();
 
         public void Initalize(string inputFile)
         {
@@ -29,7 +30,7 @@ namespace GoldenPond
                 {
                     var duckParameters = inputCommands[lineNumber].Split(' '); // odd numbered line is a new duck
 
-                    DuctDataList.Add(new Duck
+                    DuctList.Add(new Duck
                     {
                         Position = new Position { X = int.Parse(duckParameters[0]), Y = int.Parse(duckParameters[1]) },
                         Direction = ConvertStringToDirection(duckParameters[2]),
@@ -37,6 +38,8 @@ namespace GoldenPond
                     });
                 }
             }
+
+            Initialized = true;
         }
 
         private static Direction ConvertStringToDirection(string str)
@@ -58,7 +61,7 @@ namespace GoldenPond
                     direction = Direction.West;
                     break;
                 default:
-                    throw new ArgumentException($"'{str}' is not a valid direction.");
+                    throw new Exception($"'{str}' is not a valid direction.");
             }
 
             return direction;
@@ -82,7 +85,7 @@ namespace GoldenPond
                     direction = Motion.Forward;
                     break;
                 default:
-                    throw new ArgumentException($"'{c}' is not a valid direction.");
+                    throw new Exception($"'{c}' is not a valid direction.");
             }
 
             return direction;
@@ -102,28 +105,35 @@ namespace GoldenPond
 
             if (inputCommands.Count < 3 || inputCommands.Count % 2 != 1)
             {
-                throw new ArgumentException($"Input file '{inputFile}' is not properly formatted.");
+                throw new Exception($"Input file '{inputFile}' is not properly formatted.");
             }
 
             return inputCommands;
         }
 
+        private void IsInitialized()
+        {
+            if (!Initialized)
+            {
+                throw new Exception("Pond has not been initialized.");
+            }
+        }
+
         public void PrintDuckInfo()
         {
-            foreach (var duckData in DuctDataList)
+            IsInitialized();
+
+            foreach (var duck in DuctList)
             {
-                Console.WriteLine($"{duckData.Position.X} {duckData.Position.Y} {duckData.Direction}");
+                Console.WriteLine($"{duck.Position.X} {duck.Position.Y} {duck.Direction}");
             }
         }
 
         public void MoveDucks()
         {
-            if (Height < 1 || Width < 1)
-            {
-                throw new ArgumentException("Pond dimentions have not been set.");
-            }
+            IsInitialized();
 
-            foreach (var duck in DuctDataList)
+            foreach (var duck in DuctList)
             {
                 foreach (var motion in duck.MotionList)
                 {
@@ -219,7 +229,7 @@ namespace GoldenPond
 
         private bool IsMoveValid(int x, int y) => IsPositionInBounds(x, y) && IsPostionEmpty(x, y);
 
-        private bool IsPostionEmpty(int x, int y) => !DuctDataList.Any(d => d.Position.X == x && d.Position.X == y);
+        private bool IsPostionEmpty(int x, int y) => !DuctList.Any(d => d.Position.X == x && d.Position.X == y);
 
         private bool IsPositionInBounds(int x, int y) => x >= 0 && y >= 0 && x <= Width && y <= Height;
     }
