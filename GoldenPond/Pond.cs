@@ -170,7 +170,7 @@ namespace GoldenPond
             }
         }
 
-        private bool IsMoveValid(int x, int y) => IsPostionEmpty(x, y) && IsPositionInBounds(x, y);
+        private bool IsMoveValid(int x, int y) => IsPositionInBounds(x, y) && IsPostionEmpty(x, y);
 
         private bool IsPostionEmpty(int x, int y) => !DuctDataList.Any(d => d.Position.X == x && d.Position.X == y);
 
