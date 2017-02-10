@@ -21,10 +21,7 @@ namespace GoldenPond
             {
                 if (lineNumber == 0)
                 {
-                    var pondDementions = inputCommands[lineNumber].Split(' '); // first line is the pond size
-
-                    Width = int.Parse(pondDementions[0]);
-                    Height = int.Parse(pondDementions[1]);
+                    IntitalizePondSize(inputCommands[lineNumber]);
                 }
                 else if (lineNumber % 2 == 1)
                 {
@@ -40,6 +37,36 @@ namespace GoldenPond
             }
 
             Initialized = true;
+        }
+
+        private void IntitalizePondSize(string pondDementions)
+        {
+            var dementions = pondDementions.Split(' '); // first line is the pond size
+            int width;
+            int height;
+
+            if (int.TryParse(dementions[0], out width))
+            {
+                Width = width;
+            }
+            else
+            {
+                throw new Exception($"'{dementions[0]}' is not a valid integer for pond width.");
+            }
+
+            if (int.TryParse(dementions[1], out height))
+            {
+                Height = height;
+            }
+            else
+            {
+                throw new Exception($"'{dementions[1]}' is not a valid integer for pond height.");
+            }
+
+            if (Width < 0 || Height < 0)
+            {
+                throw new Exception("Both pond dimentions must be positive.");
+            }
         }
 
         private static Direction ConvertStringToDirection(string str)
@@ -229,7 +256,7 @@ namespace GoldenPond
 
         private bool IsMoveValid(int x, int y) => IsPositionInBounds(x, y) && IsPostionEmpty(x, y);
 
-        private bool IsPostionEmpty(int x, int y) => !DuctList.Any(d => d.Position.X == x && d.Position.X == y);
+        private bool IsPostionEmpty(int x, int y) => !DuctList.Any(duck => duck.Position.X == x && duck.Position.X == y);
 
         private bool IsPositionInBounds(int x, int y) => x >= 0 && y >= 0 && x <= Width && y <= Height;
     }
